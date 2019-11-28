@@ -1,0 +1,168 @@
+<html>
+
+	<style>
+	
+		body{
+			 color:#000000;
+  			 margin-left:0;
+   			 margin-right:0;
+   			 margin-top:0;
+   			 margin-bottom:0;
+   			 background-color:darkgrey; 
+		}
+		#header{
+			width: 250px;
+			margin-left:40%;
+			padding-top:5px;
+			background-color:powderblue;
+			color:azure;
+		}
+		.Container{
+			width:100%;
+			margin:auto;
+			background-color:powderblue;
+		}
+		#Container_Body{
+			
+			border:2px solid blue;
+			margin:auto;
+			margin-bottom:25px;
+		}
+		h1{
+		text-align:center;
+		background-color:darkslateblue;
+		font-size: 50pt;
+		}
+		h2{
+			background-color:azure;
+			margin-left:39%;
+			width: 280px;
+			color:blue;
+		}
+		img{
+			border: 1px solid black;
+			margin-top: 52px;
+            margin-left: 33%;
+		}
+		input{
+			margin-left:38%;
+			width:300px;
+			margin-top:13px;
+		}
+		
+		#button_gen{
+			width:105px;
+			margin-left:12%;
+			margin-bottom: 10%;
+			margin-top: 2%;
+			padding:10px;
+			
+		}
+		
+		button{
+			width:50px;
+			margin-left:20%;
+			margin-bottom:40px;
+			padding:5px;
+		}	
+	</style>
+		<head>
+			<title>ABC Kids</title>
+		</head>
+	<body>
+		<div class="Container">
+			<div id="header">
+				 <h1>ABC Kids</h1>
+			</div>
+			<div id="Container_Body">
+				<h2> Learn The English Letters </h2>
+				<input type="number" id="myInput" placeholder="Numbers of Letters">
+				<br>
+				<img id='Alphabet_Img'>
+				<button id="button_gen">Generate</button>
+				<br>
+				<div id='Generated_Buttons'></div>
+			</div>
+		</div>
+	</body>
+	<script>
+		var Cnt = localStorage.getItem('Cnt');
+		if(Cnt == null){
+			localStorage.setItem("Cnt",2);
+			Cnt=1;
+		}
+		else{
+			Cnt=parseInt(localStorage.getItem('Cnt'));
+		}
+		window.addEventListener('load',function(e){
+			localStorage.setItem("Page-Loaded"+Cnt,tempLocalStorage(e.target.textContent,e.type,new Date()));
+			Cnt++;
+			localStorage.setItem("Cnt",Cnt);
+		});
+		window.addEventListener('unload',function(e){
+			localStorage.setItem("Page-UnLoaded"+Cnt,tempLocalStorage(e.target.textContent,e.type,new Date()));
+			Cnt++;
+			localStorage.setItem("Cnt",Cnt);
+		});
+		var Clear_Local_Storage = setInterval(clearLocalStorage, 50000);
+		function clearLocalStorage() {
+			localStorage.clear();
+			localStorage.setItem("Cnt",1);
+			Cnt=1;
+		}
+		var Alphabet_Img = document.getElementById('Alphabet_Img');
+		var Alphabet_ASCI = [65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90];
+		var Temp = document.getElementById('Generated_Buttons');
+		var My_Button = document.getElementById('button_gen');
+		My_Button.addEventListener('click',function(e){
+			Alphabet_Img.src='';
+			var List_Buttons = document.getElementById("Generated_Buttons");
+			while (List_Buttons.hasChildNodes()) {  
+				List_Buttons.removeChild(List_Buttons.firstChild);
+			}	
+			localStorage.setItem("Generatte-Clicked"+Cnt,tempLocalStorage(e.target.textContent,e.type,new Date()));
+			Cnt++;
+			localStorage.setItem("Cnt",Cnt);
+            var Number_Generate = document.getElementById("myInput").value;
+			if(Number_Generate > 26 || Number_Generate < 1){
+				alert("Error, Check The Number Again");
+				}
+			else{
+			var Select_Alphabet = [];
+			for(var i = 0; i < Number_Generate; i++){
+				var Random = Get_Random(0,26);	
+						Select_Alphabet[i] = Alphabet_ASCI[Random];
+					}
+			for(var i = 0; i < Select_Alphabet.length; i++){
+				var My_Target = document.createElement('button');
+				var My_Text = document.createTextNode(String.fromCharCode(Select_Alphabet[i]));
+				My_Target.appendChild(My_Text);
+				Temp.appendChild(My_Target);
+			}
+		var My_Buttons = document.getElementsByTagName('button');
+				for(var i = 0 ; i < My_Buttons.length; i++){
+					My_Buttons[i].addEventListener('click',function(e){	
+					var Alphabet=e.target.textContent;
+						if(Alphabet!='Generate'){
+							Alphabet_Img.src='img/'+e.target.textContent+'.jpg';
+							e.target.style.border="1px solid red";
+							localStorage.setItem('alphabet '+Alphabet+' clicked'+Cnt,tempLocalStorage(e.target.textContent,e.type,new Date()));
+							Cnt++;
+							localStorage.setItem("Cnt",Cnt);
+						}
+				});
+		}	
+		}
+		}
+		);
+		function Get_Random(min, max) {
+				return Math.floor(Math.random() * (max - min) ) + min;
+				}
+				function tempLocalStorage(target,type,date){
+					this.target = target;
+					this.type = type;
+					this.date = date;
+					return name+' '+type+' '+date;
+				}
+	</script>
+</html>
